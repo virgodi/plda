@@ -3,7 +3,7 @@ import numpy as np
 import threading
 
 
-class LDA_vi:
+class LDA:
     def __init__(self, num_topics, num_threads=1):
         self.num_topics = num_topics
         self.num_threads = num_threads
