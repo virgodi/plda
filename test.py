@@ -1,6 +1,6 @@
 import sys
 import os.path
-sys.path.append(os.path.join('..', 'util'))
+sys.path.append('util')
 
 import set_compiler
 set_compiler.install()
@@ -9,6 +9,7 @@ import pyximport
 pyximport.install()
 
 import numpy as np
+sys.path.append('OVI')
 import lda_ovi
 import time
 
@@ -16,8 +17,8 @@ if __name__ == '__main__':
 
     ''' LOADING THE LAS VEGAS DATA '''
 
-    dtm = np.load('../../lv_dtm.npy').astype(int)
-    vocablv = np.load('../../vocab.npy')
+    dtm = np.load('../lv_dtm.npy').astype(int)
+    vocablv = np.load('../vocab.npy')
 
     ''' Initialising parameters '''
 
