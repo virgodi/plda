@@ -17,8 +17,8 @@ if __name__ == '__main__':
 
     ''' LOADING THE LAS VEGAS DATA '''
 
-    dtm = np.load('../lv_dtm.npy').astype(int)
-    vocablv = np.load('../vocab.npy')
+    dtm = np.load('../Desktop/lv_dtm.npy').astype(int)
+    vocablv = np.load('../Desktop/vocab.npy')
 
     ''' Initialising parameters '''
 
