@@ -8,6 +8,9 @@ This package was tested on OSX. We ran experiments on Python 2.7 with needed pac
 
 - Numpy
 - Threading
+- Cython
+
+The execution of the Cython scripts require a C compiler.
 
 # Installation:
 
