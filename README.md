@@ -21,7 +21,7 @@ The organisation of the package is as follow:
 
  - Two classes: 
     
-    * The "oviLDA" class to perform Online Variational Inference and the "cgsLDA" class to perform Collapsed Gibbs Sampling
+    * The *oviLDA* class to perform Online Variational Inference and the *cgsLDA* class to perform Collapsed Gibbs Sampling
  
     * These 2 classes have particular constructors based on the specificity of each algorithm but have identical methods:
  
@@ -35,9 +35,9 @@ The organisation of the package is as follow:
     
     * A perplexity function that evaluates the fit of the model
     
-    * A LogLikelihood function that evaluates the log-likelihood of the model \n
+    * A LogLikelihood function that evaluates the log-likelihood of the model 
     
-    More details on these functions and what they actually evaluate are present in the Ipython notebook.
+More details on these functions and what they actually evaluate are present in the Ipython notebook.
     
  - A subset of the Reuters news dataset in the form of a document term matrix and the associated vocabulary.
     
