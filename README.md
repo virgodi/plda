@@ -35,12 +35,15 @@ The organisation of the package is as follow:
     
     * A perplexity function that evaluates the fit of the model
     
-    * A LogLikelihood function that evaluates the log-likelihood of the model
+    * A LogLikelihood function that evaluates the log-likelihood of the model \n
     
+    More details on these functions and what they actually evaluate are present in the Ipython notebook.
     
- 
- 
+ - A subset of the Reuters news dataset in the form of a document term matrix and the associated vocabulary.
+    
 
-# Test to run
+# Test to run:
 
+For you to test if your system is up to the requirements and to showcase the package in action, we included a Python test.py file.
 
+You can run both versions of LDA by commenting and uncommenting respectively lines 36 and 39.
