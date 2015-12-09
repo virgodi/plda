@@ -26,20 +26,59 @@ The organisation of the package is as follow:
     
     * The *oviLDA* class to perform Online Variational Inference and the *cgsLDA* class to perform Collapsed Gibbs Sampling
  
-    * These 2 classes have particular constructors based on the specificity of each algorithm but have identical methods:
+    * These 2 classes have identical methods, and only a few specific attributes change for inference purposes:
  
-        - A fit method taking as a parameter the corpus we want to fit the LDA on
+        - Common attributes include:
         
-        - A transform method that can apply an existing model to new documents and returns the topic assignments for these new documents
+       |    Attribute    |                        Type                       |                                                        Details                                                        |
+       |:---------------:|:-------------------------------------------------:|:---------------------------------------------------------------------------------------------------------------------:|
+       |    num_topics   |                        Int                        |                                                Number of topics desired                                               |
+       |   num_threads   |                        Int                        |                                      Number of threads needed for parallelisation                                     |
+       |      topics     | Array of dimensions: num_topics x len(vocabulary) | Each row representing a particular topic, after normalisation these can be treated as multinomial over the vocabulary |
+       |      gamma      |   Array of dimensions: len(corpus) x num_topics   |                               Each row representing the topic assignment for a document                               |
+       | _log_likelihood |                       Float                       |                                       Perplexity evaluated on the training data                                       |
+        
+        - Methods:
+        
+            * fit(dtm): fits the model for a particular corpus
+            
+            | Parameters |                    Type                   |        Details       |
+            |------------|:-----------------------------------------:|----------------------|
+            |     dtm    | array of dimensions: len(docs) x len(voc) | document term matrix |
+           
+            * transform(dtm): Transform new documents into a topic assignment matrix according to a previously trained model
+            
+            | Parameters |                    Type                   |        Details       |
+            |------------|:-----------------------------------------:|----------------------|
+            |     dtm    | array of dimensions: len(docs) x len(voc) | document term matrix |
+            
+            |   Return  |                     Type                    |        Details       |
+            |-----------|:-------------------------------------------:|----------------------|
+            |   gamma   | array of dimensions: len(docs) x num_topics |  Topic assignments   |
+        
     
  -  Useful functions related to the LDA model in the LDAutil folder:
     
-    * A print_topic function that prints the top n words from topics wanted by the user
+    * print_topic(model,vocabulary,num_top_words): prints the topics for a fitted LDA model
     
-    * A perplexity function that evaluates the fit of the model
+    |   Parameters  |                   Type                   |                              Details                              |
+    |:-------------:|:----------------------------------------:|:-----------------------------------------------------------------:|
+    |     model     |             cgsLDA or oviLDA             |                   A previously fitted LDA model                   |
+    |   vocabulary  | array of dimensions: 1 x len(vocabulary) | An array of strings ordered in the same way as the columns of DTM |
+    | num_top_words |                    Int                   |                  Number of wanted words per topic                 |
     
-    * A LogLikelihood function that evaluates the log-likelihood of the model 
+    * perplexity(model,dtm_test): computes the log-likelihood of the documents in dtm_test based on the
+    topic distribution already learned by the model
     
+    | Parameters |                       Type                       |                                          Details                                         |
+    |:----------:|:------------------------------------------------:|:----------------------------------------------------------------------------------------:|
+    |    model   |                 cgsLDA or oviLDA                 |                               A previously fitted LDA model                              |
+    |   dtm_new  | array of dimensions: len(docs) x len(vocabulary) | A new DTM corresponding to the new documents on which we want to evaluate the perplexity |
+
+    |   Return   |  Type |                Details                |
+    |:----------:|:-----:|:-------------------------------------:| 
+    | perplexity | float | Perplexity evaluated on new documents |
+
 More details on these functions and what they actually evaluate are present in the Ipython notebook.
     
  - A subset of the Reuters news dataset in the form of a document term matrix and the associated vocabulary.
