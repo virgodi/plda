@@ -75,6 +75,10 @@ The organisation of the package is as follow:
     |    model   |                 cgsLDA or oviLDA                 |                               A previously fitted LDA model                              |
     |   dtm_new  | array of dimensions: len(docs) x len(vocabulary) | A new DTM corresponding to the new documents on which we want to evaluate the perplexity |
 
+    |   Return   |  Type |                Details                |
+    |:----------:|:-----:|:-------------------------------------:| 
+    | perplexity | float | Perplexity evaluated on new documents |
+
 More details on these functions and what they actually evaluate are present in the Ipython notebook.
     
  - A subset of the Reuters news dataset in the form of a document term matrix and the associated vocabulary.
