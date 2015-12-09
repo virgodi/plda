@@ -109,7 +109,7 @@ class cgsLDA:
         self.sum_K = sum_K
 
         # Compute the perplexity of the trained model on the train data
-        self.perplexity_train = Evaluation._log_likelihood(self, gamma, dtm)
+        self.perplexity_train = Evaluation._log_likelihood(self, gamma, documents)
 
     def transform(self, documents):
         if self.topics is None:

@@ -30,8 +30,8 @@ def _log_likelihood(model, gamma, dtm):
         for i in range(gamma.shape[0]):
             doc_idx = np.nonzero(dtm[i, :])[0]
             doc_cts = dtm[i, doc_idx]
-            num += np.sum(np.log(np.dot(gamma[i, :],
-                          topics[:, doc_idx]))*doc_cts)
+            print np.dot(gamma[i, :],topics[:, doc_idx])
+            num += np.sum(np.log(np.dot(gamma[i, :],topics[:, doc_idx]))*doc_cts)
             denom += np.sum(doc_cts)
     return num/denom
 

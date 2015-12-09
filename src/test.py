@@ -19,32 +19,26 @@ if __name__ == '__main__':
 
     # LOADING THE LAS VEGAS DATA 
 
-    dtm = np.load('../../lv_dtm.npy').astype(int)
-    vocablv = np.load('../../vocab.npy')
+    dtm = np.load('../reuters/dtm.npy')
+    vocablv = np.load('../reuters/vocab.npy')
 
     # Initialising parameters
 
     # Batchsize 
 
-    S = 40 
-
-    max_iter = 1000
-    threshold = 0.00000001
-
-    # Hyperparameters
-
-    tau = 512
-    kappa = 0.7
-    alpha = 1/40
-    eta = 1/40
-    num_topics = 40
+    num_topics = 20
     num_threads = 8
     
 
     # Constructing the model
-    lda = oviLDA(num_topics, num_threads)
+
+    # UNCOMMENT THE NEXT LINE TO USE OVI:
+    #lda = oviLDA(num_topics, num_threads)
+
+    # UNCOMMENT THE NEXT LINE TO USE CGS:
+    lda = cgsLDA(num_topics, num_threads)
     print ''
-    print 'Fitting an Online Variational Inference model on Las Vegas restaurant reviews with 40 topics:'
+    print 'Fitting an LDA model on the Reuters dataset with 20 topics:'
     
     # Fitting the model
     np.random.seed(0)
@@ -55,7 +49,7 @@ if __name__ == '__main__':
     print 'Run time: %s sec with 8 threads' %(end)
     Evaluation.print_topic(lda,vocablv, num_top_words=10)
     print ''
-    print Evaluation.perplexity(lda,dtm)
+    #print Evaluation.perplexity(lda,dtm)
     print ''
     print 'Perplexity on train dataset is %s' % lda.perplexity_train
     
