@@ -38,6 +38,26 @@ The organisation of the package is as follow:
        |      gamma      |   Array of dimensions: len(corpus) x num_topics   |                               Each row representing the topic assignment for a document                               |
        | _log_likelihood |                       Float                       |                                       Perplexity evaluated on the training data                                       |
         
+        - OVI specific attributes:
+        
+        |    Attribute   |      Type      |                                Details                                |
+        |:--------------:|:--------------:|:---------------------------------------------------------------------:|
+        |   batch_size   |       Int      |             Number of document to consider in every batch             |
+        |       tau      |       Int      |    Parameter used to weight the first iterations of the algorithm     |
+        |      kappa     | Float: (0.5,1] | Parameter controlling the rate at which we forget previous iterations |
+        | max_iterations |       Int      |        Maximum number of iterations on one particular document        |
+        
+        - CGS specific attributes:
+        
+        |   Attribute   |   Type  |                                Details                                |
+        |:-------------:|:-------:|:---------------------------------------------------------------------:|
+        |   iterations  |   Int   |                     Number of sampling iterations                     |
+        |    damping    |   Int   |                                                                       |
+        | sync_interval |   Int   | Parameter controlling how often threads aggregate topic distributions |
+        |     alpha     |         |        Maximum number of iterations on one particular document        |
+        |      beta     |         |                                                                       |
+        |  split_words  | Boolean |                                                                       |
+        
         - Methods:
         
             * fit(dtm): fits the model for a particular corpus
