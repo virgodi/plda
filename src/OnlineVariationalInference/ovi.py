@@ -6,9 +6,11 @@ from LDAutil import Evaluation
 
 class oviLDA:
 
-    def __init__(self, num_topics, num_threads=4, batch_size=20, tau=512, kappa=0.7):
+    def __init__(self, num_topics, num_threads=4, max_iterations=1000,
+                 batch_size=20, tau=512, kappa=0.7):
         self.num_topics = num_topics
         self.num_threads = num_threads
+        self.max_iterations = max_iterations
         self.batch_size = batch_size
         self.tau = tau
         self.kappa = kappa
@@ -21,6 +23,9 @@ class oviLDA:
 
     def set_threads(self, t):
         self.num_threads = t
+
+    def set_max_iterations(self, it):
+        self.num_max_iterations = it
 
     def set_batch_size(self, b):
         self.batch_size = b
@@ -132,4 +137,4 @@ class oviLDA:
 
         # Lambda_int is shared among the threads
         ovi_cython.e_step(docs, dtm, gamma, ExpELogBeta, ExpLogTethad, topics_int_t, phi,
-                             self.num_topics)
+                             self.num_topics, self.max_iterations)
