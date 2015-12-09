@@ -7,6 +7,7 @@ import matutil as mat
 
 import numpy as np
 import threading
+from LDAutil import Evaluation
 
 
 class cgsLDA:
@@ -106,6 +107,9 @@ class cgsLDA:
         self.topics = topics
         self.gamma = gamma
         self.sum_K = sum_K
+
+        # Compute the perplexity of the trained model on the train data
+        self.perplexity_train = Evaluation._log_likelihood(self, gamma, dtm)
 
     def transform(self, documents):
         if self.topics is None:
