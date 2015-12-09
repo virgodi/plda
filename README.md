@@ -25,8 +25,9 @@ The organisation of the package is as follow:
  
     * These 2 classes have particular constructors based on the specificity of each algorithm but have identical methods:
  
-        ** A fit method taking as a parameter the corpus we want to fit the LDA on
-        ** A transform method that can apply an existing model to new documents and returns the topic assignments for these new documents
+        - A fit method taking as a parameter the corpus we want to fit the LDA on
+        
+        - A transform method that can apply an existing model to new documents and returns the topic assignments for these new documents
     
  -  Useful functions related to the LDA model in the LDAutil folder:
     
