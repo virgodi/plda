@@ -40,31 +40,41 @@ The organisation of the package is as follow:
         
         - Methods:
         
-           * fit(dtm): fits the model for a particular corpus
+            * fit(dtm): fits the model for a particular corpus
+            
+            | Parameters |                    Type                   |        Details       |
+            |------------|:-----------------------------------------:|----------------------|
+            |     dtm    | array of dimensions: len(docs) x len(voc) | document term matrix |
            
-           | Parameters |                    Type                   |        Details       |
-           |------------|:-----------------------------------------:|----------------------|
-           |     dtm    | array of dimensions: len(docs) x len(voc) | document term matrix |
-           
-           * transform(dtm): Transform new documents into a topic assignment matrix according to a previously trained model
-           
-           | Parameters |                    Type                   |        Details       |
-           |------------|:-----------------------------------------:|----------------------|
-           |     dtm    | array of dimensions: len(docs) x len(voc) | document term matrix |
-           
-           |   Return  |                     Type                    |        Details       |
-           |-----------|:-------------------------------------------:|----------------------|
-           |   gamma   | array of dimensions: len(docs) x num_topics |  Topic assignments   |
+            * transform(dtm): Transform new documents into a topic assignment matrix according to a previously trained model
+            
+            | Parameters |                    Type                   |        Details       |
+            |------------|:-----------------------------------------:|----------------------|
+            |     dtm    | array of dimensions: len(docs) x len(voc) | document term matrix |
+            
+            |   Return  |                     Type                    |        Details       |
+            |-----------|:-------------------------------------------:|----------------------|
+            |   gamma   | array of dimensions: len(docs) x num_topics |  Topic assignments   |
         
     
  -  Useful functions related to the LDA model in the LDAutil folder:
     
-    * A print_topic function that prints the top n words from topics wanted by the user
+    * print_topic(model,vocabulary,num_top_words): prints the topics for a fitted LDA model
     
-    * A perplexity function that evaluates the fit of the model
+    |   Parameters  |                   Type                   |                              Details                              |
+    |:-------------:|:----------------------------------------:|:-----------------------------------------------------------------:|
+    |     model     |             cgsLDA or oviLDA             |                   A previously fitted LDA model                   |
+    |   vocabulary  | array of dimensions: 1 x len(vocabulary) | An array of strings ordered in the same way as the columns of DTM |
+    | num_top_words |                    Int                   |                  Number of wanted words per topic                 |
     
-    * A LogLikelihood function that evaluates the log-likelihood of the model 
+    * perplexity(model,dtm_test): computes the log-likelihood of the documents in dtm_test based on the
+    topic distribution already learned by the model
     
+    | Parameters |                       Type                       |                                          Details                                         |
+    |:----------:|:------------------------------------------------:|:----------------------------------------------------------------------------------------:|
+    |    model   |                 cgsLDA or oviLDA                 |                               A previously fitted LDA model                              |
+    |   dtm_new  | array of dimensions: len(docs) x len(vocabulary) | A new DTM corresponding to the new documents on which we want to evaluate the perplexity |
+
 More details on these functions and what they actually evaluate are present in the Ipython notebook.
     
  - A subset of the Reuters news dataset in the form of a document term matrix and the associated vocabulary.
