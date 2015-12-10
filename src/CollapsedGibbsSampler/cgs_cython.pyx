@@ -88,7 +88,7 @@ cdef inline void _CGS_iter(int[:, ::1] documents, double[:, ::1] K_V, double[:, 
                         randnum = rand()/float(RAND_MAX)*cumulative_p
                         topic = get_index(p_K, randnum, K)
                         
-                        #might have hit a spot in the distribution with K_V[topic,j] == 0 for inference                        
+                        #might have hit a spot in the distribution with K_V[topic,j] == 0 for inference
                         if training == 0 and K_V[topic,j] == 0:
                             #randomly decide to increment or decrement to next valid topic
                             randnum = rand()/float(RAND_MAX)
@@ -101,11 +101,11 @@ cdef inline void _CGS_iter(int[:, ::1] documents, double[:, ::1] K_V, double[:, 
                                     dec(topic)
                             if topic < 0:
                                 topic = 0
-                                while K_V[topic,j] == 0:
+                                while K_V[topic,j] == 0 and topic < K - 1:
                                     inc(topic)
                             elif topic == K:
                                 topic = K-1
-                                while K_V[topic,j] == 0:
+                                while K_V[topic,j] == 0 and topic > 0:
                                     dec(topic)
                         
                         #assign new topic
