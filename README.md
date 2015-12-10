@@ -109,3 +109,7 @@ More details on these functions and what they actually evaluate are present in t
 For you to test if your system is up to the requirements and to showcase the package in action, we included a Python test.py file.
 
 You can run both versions of LDA by commenting and uncommenting respectively lines 36 and 39.
+
+# References:
+
+- The OVI code is based on Hoffman's 2010 paper ["Online Learning for Latent Dirichlet Allocation"](https://www.cs.princeton.edu/~blei/papers/HoffmanBleiBach2010b.pdf)
