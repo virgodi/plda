@@ -49,14 +49,14 @@ The organisation of the package is as follow:
         
         - CGS specific attributes:
         
-        |   Attribute   |   Type  |                                Details                                |
-        |:-------------:|:-------:|:---------------------------------------------------------------------:|
-        |   iterations  |   Int   |                     Number of sampling iterations                     |
-        |    damping    |   Int   |                                                                       |
-        | sync_interval |   Int   | Parameter controlling how often threads aggregate topic distributions |
-        |     alpha     |         |        Maximum number of iterations on one particular document        |
-        |      beta     |         |                                                                       |
-        |  split_words  | Boolean |                                                                       |
+        |   Attribute   |   Type  |                                       Details                                        |
+        |:-------------:|:-------:|:------------------------------------------------------------------------------------:|
+        |   iterations  |   Int   |                          Number of sampling iterations                               |
+        |    damping    |   Int   | Likelihood full number of occurrences will be sampled. See notebook for more details |
+        | sync_interval |   Int   |      Parameter controlling how often threads aggregate topic distributions           |
+        |     alpha     |         |                     Dirichlet prior parameter for document/topics                    |
+        |      beta     |         |                      Dirichlet prior parameter for topics/words                      |
+        |  split_words  | Boolean |            Parallelization method used. See notebook for more details                |
         
         - Methods:
         
