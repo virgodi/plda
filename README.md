@@ -113,3 +113,6 @@ You can run both versions of LDA by commenting and uncommenting respectively lin
 # References:
 
 - The OVI code is based on Hoffman's 2010 paper ["Online Learning for Latent Dirichlet Allocation"](https://www.cs.princeton.edu/~blei/papers/HoffmanBleiBach2010b.pdf)
+- The CGS code relies on:
+    * [Efficient Collapsed Gibbs Sampling For Latent Dirichlet Allocation](http://jmlr.csail.mit.edu/proceedings/papers/v13/xiao10a/xiao10a.pdf) by Han Xiao and Thomas Stibor
+    * [Parallel Inference for Latent Dirichlet Allocation on Graphics Processing Units](https://www.cs.purdue.edu/homes/alanqi/papers/Parallel-Inf-LDA-GPU-NIPS.pdf) by Feng Yan, Ningyi Xu and Yuan (Alan) Qi
