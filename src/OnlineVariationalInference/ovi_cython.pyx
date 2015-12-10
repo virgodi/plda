@@ -95,15 +95,15 @@ cpdef void m_step(double[:, ::1] topics, double[:, ::1] topics_int,
 def e_step(int[:] docs, long[:, ::1] dtm, double[:, ::1] gamma,
                   double[:, ::1] ExpELogBeta, double[::1] ExpLogTethad,
                   double[:, ::1] topics_int, double[:, ::1] phi,
-                  int num_topics):
+                  int num_topics, int max_iterations):
     with nogil:
         _e_step(docs, dtm, gamma, ExpELogBeta, ExpLogTethad, topics_int,
-                phi, num_topics)
+                phi, num_topics, max_iterations)
 
 cdef void _e_step(int[:] docs, long[:, ::1] dtm, double[:, ::1] gamma,
                   double[:, ::1] ExpELogBeta, double[::1] ExpLogTethad,
                   double[:, ::1] topics_int, double[:, ::1] phi,
-                  int num_topics) nogil:
+                  int num_topics, int max_iterations) nogil:
     cdef:
         int num_words_loc, j_v, j_t, j_v_r, d, inner_it, i
         double el1, el2, s, err, a_dot, diff
@@ -128,7 +128,7 @@ cdef void _e_step(int[:] docs, long[:, ::1] dtm, double[:, ::1] gamma,
                 # Reduction variable
                 num_words_loc = num_words_loc + 1
 
-        for inner_it in range(1000):
+        for inner_it in range(max_iterations):
 
             exp_digamma1d(gamma, ExpLogTethad, d)
 
