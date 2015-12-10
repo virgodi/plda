@@ -87,8 +87,7 @@ class cgsLDA:
             This splits V into num_threads regions and provides locking mechanisms
             to update topics. This avoids the need to store the local topics and synchronize
             in case the corpus is very large, however the extra locking may hinder speedups
-        '''
-        
+        '''        
         # topic -> words distribution
         topics = np.zeros((self.num_topics, documents.shape[1]), dtype=np.float)
         # documents -> topic distribution
@@ -116,6 +115,7 @@ class cgsLDA:
     def transform(self, documents):
         if self.topics is None:
             raise NameError('The model has not been trained yet')
+            
         # create a new gamma that has additional rows for documents
         gamma = np.zeros(
             (documents.shape[0] + self.gamma.shape[0], self.gamma.shape[1]))
@@ -135,6 +135,7 @@ class cgsLDA:
         '''
             Function shared by the fit and transform functions to run parallelised CGS
         '''
+        documents = documents.astype(np.dtype("i"))
         # vector of threads
         tList = [None]*self.num_threads
         # count array to synchronize

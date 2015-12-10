@@ -21,7 +21,7 @@ class oviLDA:
     def set_topics(self, n):
         self.num_topics = n
 
-    def set_threads(self, t):
+    def set_num_threads(self, t):
         self.num_threads = t
 
     def set_max_iterations(self, it):
