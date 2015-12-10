@@ -56,7 +56,7 @@ class cgsLDA:
         self.split_words = sw
 
     # baseline serial cython CGS
-    def sCGS(self, documents):
+    def _sCGS(self, documents):
         # topic -> words distribution
         topics = np.zeros((self.num_topics, documents.shape[1]), dtype=np.float)
         # documents -> topic distribution
@@ -75,6 +75,7 @@ class cgsLDA:
                        self.alpha, self.beta, self.iterations, sampling, p_K, uniq_K)
         self.topics = topics
         self.gamma = gamma
+        self.sum_K = sum_K
 
     def fit(self, documents):
         '''
@@ -87,6 +88,7 @@ class cgsLDA:
             to update topics. This avoids the need to store the local topics and synchronize
             in case the corpus is very large, however the extra locking may hinder speedups
         '''
+        
         # topic -> words distribution
         topics = np.zeros((self.num_topics, documents.shape[1]), dtype=np.float)
         # documents -> topic distribution
@@ -124,12 +126,12 @@ class cgsLDA:
         sum_K = self.sum_K.copy()
         sampling = np.zeros(
             (documents.shape[0], documents.shape[1], np.max(documents)), dtype=np.dtype("i"))
-        self._pCGS(documents, topics, gamma, sum_K, sampling)
+        self._pCGS(documents, topics, gamma, sum_K, sampling, False)
 
         # return the gamma over the first documents.shape[0] rows
         return gamma[0:documents.shape[0]]
 
-    def _pCGS(self, documents, topics, gamma, sum_K, sampling):
+    def _pCGS(self, documents, topics, gamma, sum_K, sampling, training = True):
         '''
             Function shared by the fit and transform functions to run parallelised CGS
         '''
@@ -148,12 +150,12 @@ class cgsLDA:
                 wLocks[i] = threading.Lock()
         for i in range(self.num_threads):
             tList[i] = threading.Thread(target=self._workerCGS, args=(
-                wLocks, copyCondition, copyCount, i, documents, topics, gamma, sum_K, sampling))
+                wLocks, copyCondition, copyCount, i, documents, topics, gamma, sum_K, sampling, training))
             tList[i].start()
         for i in range(self.num_threads):
             tList[i].join()
 
-    def _workerCGS(self, wLocks, copyCondition, copyCount, thread_num, documents, topics, gamma, sum_K, sampling):
+    def _workerCGS(self, wLocks, copyCondition, copyCount, thread_num, documents, topics, gamma, sum_K, sampling, training):
         # vectors for probability and topic counts
         p_K = np.zeros((self.num_topics), dtype=np.float)
         uniq_K = np.zeros((self.num_topics), dtype=np.dtype("i"))
@@ -188,7 +190,7 @@ class cgsLDA:
         # initialize topics for each thread
         if wLocks is None:
             cgs_cython.init_topics(
-                documents, t_topics, gamma, t_sum_K, curr_K, d_start, d_end, 0, documents.shape[1])
+                documents, t_topics, gamma, t_sum_K, curr_K, d_start, d_end, 0, documents.shape[1], training)
         else:
             for i in xrange(self.num_threads):
                 word_group = (i+thread_num) % self.num_threads
@@ -196,7 +198,7 @@ class cgsLDA:
                     w_start = (word_group)*w_interval
                     w_end = min(documents.shape[1], w_start + w_interval)
                     cgs_cython.init_topics(
-                        documents, topics, gamma, t_sum_K, curr_K[i], d_start, d_end, w_start, w_end)
+                        documents, topics, gamma, t_sum_K, curr_K[i], d_start, d_end, w_start, w_end, training)
 
         # have sum_K and topics be the sum of all thread-specific
         # t_sum_K's/t_topics's
@@ -214,7 +216,7 @@ class cgsLDA:
         for i in xrange(self.iterations/self.sync_interval):
             if wLocks is None:
                 cgs_cython.CGS_iter(documents, t_topics, gamma, t_sum_K, curr_K, self.alpha, self.beta,
-                                    sampling, p_K, uniq_K, d_start, d_end, 0, documents.shape[1], self.sync_interval)
+                                    sampling, p_K, uniq_K, d_start, d_end, 0, documents.shape[1], self.sync_interval, training)
             else:
                 # work through each group of words
                 for j in xrange(self.num_threads):
@@ -224,7 +226,7 @@ class cgsLDA:
                         w_end = min(
                             documents.shape[1], (word_group+1)*w_interval)
                         cgs_cython.CGS_iter(documents, topics, gamma, t_sum_K, curr_K[
-                                            j], self.alpha, self.beta, sampling, p_K, uniq_K, d_start, d_end, w_start, w_end, self.sync_interval)
+                                            j], self.alpha, self.beta, sampling, p_K, uniq_K, d_start, d_end, w_start, w_end, self.sync_interval, training)
 
             # must synchronize sum_K and topics
             # this subtraction can be done in parallel as originals unmodified

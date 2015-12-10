@@ -7,12 +7,12 @@ from libc.stdlib cimport rand, RAND_MAX
 '''
 Initial topic sampling for Gibbs sampling
 '''
-def init_topics(int[:, ::1] documents, double[:, ::1] K_V, double[:, ::1] D_K, int[::1] sum_K, int[::1] curr_K, int d_start, int d_end, int w_start, int w_end):
+def init_topics(int[:, ::1] documents, double[:, ::1] K_V, double[:, ::1] D_K, int[::1] sum_K, int[::1] curr_K, int d_start, int d_end, int w_start, int w_end, int training):
     with nogil:
-        _init_topics(documents, K_V, D_K, sum_K, curr_K, d_start, d_end, w_start, w_end)
+        _init_topics(documents, K_V, D_K, sum_K, curr_K, d_start, d_end, w_start, w_end, training)
 
 @cython.boundscheck(False)
-cdef inline void _init_topics(int[:, ::1] documents, double[:, ::1] K_V, double[:, ::1] D_K, int[::1] sum_K, int[::1] curr_K, int d_start, int d_end, int w_start, int w_end) nogil:
+cdef inline void _init_topics(int[:, ::1] documents, double[:, ::1] K_V, double[:, ::1] D_K, int[::1] sum_K, int[::1] curr_K, int d_start, int d_end, int w_start, int w_end, int training) nogil:
     cdef size_t i,j,k
     # number of topics
     cdef int K = K_V.shape[0]
@@ -24,20 +24,21 @@ cdef inline void _init_topics(int[:, ::1] documents, double[:, ::1] K_V, double[
             for k in xrange(documents[i,j]):
                 topic = count % K
                 curr_K[count] = topic
-                inc(sum_K[topic])
-                inc(K_V[topic, j])
                 inc(D_K[i, topic])
                 inc(count)
+                if training == 1:
+                    inc(sum_K[topic])
+                    inc(K_V[topic, j])
 
 '''
 CGS with dynamic sampling with specified documents/words and iterations
 '''
-def CGS_iter(int[:, ::1] documents, double[:, ::1] K_V, double[:, ::1] D_K, int[::1] sum_K, int[::1] curr_K, double alpha, double beta, int[:, :, ::1] sampling, double[::1] p_K, int[::1] uniq_K, int d_start, int d_end, int w_start, int w_end, int iterations):
+def CGS_iter(int[:, ::1] documents, double[:, ::1] K_V, double[:, ::1] D_K, int[::1] sum_K, int[::1] curr_K, double alpha, double beta, int[:, :, ::1] sampling, double[::1] p_K, int[::1] uniq_K, int d_start, int d_end, int w_start, int w_end, int iterations, int training):
     with nogil:
-        _CGS_iter(documents, K_V, D_K, sum_K, curr_K, alpha, beta, sampling, p_K, uniq_K, d_start, d_end, w_start, w_end, iterations)
+        _CGS_iter(documents, K_V, D_K, sum_K, curr_K, alpha, beta, sampling, p_K, uniq_K, d_start, d_end, w_start, w_end, iterations, training)
 
 @cython.boundscheck(False)
-cdef inline void _CGS_iter(int[:, ::1] documents, double[:, ::1] K_V, double[:, ::1] D_K, int[::1] sum_K, int[::1] curr_K, double alpha, double beta, int[:, :, ::1] sampling, double[::1] p_K, int[::1] uniq_K, int d_start, int d_end, int w_start, int w_end, int iterations) nogil:
+cdef inline void _CGS_iter(int[:, ::1] documents, double[:, ::1] K_V, double[:, ::1] D_K, int[::1] sum_K, int[::1] curr_K, double alpha, double beta, int[:, :, ::1] sampling, double[::1] p_K, int[::1] uniq_K, int d_start, int d_end, int w_start, int w_end, int iterations, int training) nogil:
     cdef size_t i,j,k,p,it
     # number of types
     cdef int V = documents.shape[1]
@@ -74,21 +75,44 @@ cdef inline void _CGS_iter(int[:, ::1] documents, double[:, ::1] K_V, double[:, 
                     for k in xrange(num_samples):
                         #retrieve current topic and decrement
                         topic = curr_K[count]
-                        dec(sum_K[topic])
-                        dec(K_V[topic,j])
+                        if training == 1:
+                            dec(sum_K[topic])
+                            dec(K_V[topic,j])
                         dec(D_K[i,topic])
                         
                         cumulative_p = 0
                         for p in xrange(K):
-                            cumulative_p += (D_K[i, p] + alpha)*(K_V[p,j] + beta)/(sum_K[p] + V*beta)
+                            if training == 1 or K_V[p,j] > 0:
+                                cumulative_p += (D_K[i, p] + alpha)*(K_V[p,j] + beta)/(sum_K[p] + V*beta)
                             p_K[p] = cumulative_p
                         randnum = rand()/float(RAND_MAX)*cumulative_p
                         topic = get_index(p_K, randnum, K)
                         
+                        #might have hit a spot in the distribution with K_V[topic,j] == 0 for inference                        
+                        if training == 0 and K_V[topic,j] == 0:
+                            #randomly decide to increment or decrement to next valid topic
+                            randnum = rand()/float(RAND_MAX)
+                            #if > .5 then increment, if <.5 decrement
+                            if randnum > .5:
+                                while K_V[topic,j] == 0 and topic < K:
+                                    inc(topic)
+                            else:
+                                while K_V[topic,j] == 0 and topic >= 0:
+                                    dec(topic)
+                            if topic < 0:
+                                topic = 0
+                                while K_V[topic,j] == 0:
+                                    inc(topic)
+                            elif topic == K:
+                                topic = K-1
+                                while K_V[topic,j] == 0:
+                                    dec(topic)
+                        
                         #assign new topic
                         curr_K[count] = topic
-                        inc(sum_K[topic])
-                        inc(K_V[topic,j])
+                        if training == 1:
+                            inc(sum_K[topic])
+                            inc(K_V[topic,j])
                         inc(D_K[i, topic])
                         inc(count)
                         

@@ -47,9 +47,9 @@ if __name__ == '__main__':
     end = time.time()-start
 
     print 'Run time: %s sec with 8 threads' %(end)
-    Evaluation.print_topic(lda,vocablv, num_top_words=10)
+    #Evaluation.print_topic(lda,vocablv, num_top_words=10)
     print ''
-    #print Evaluation.perplexity(lda,dtm)
+    print Evaluation.perplexity(lda,dtm)
     print ''
     print 'Perplexity on train dataset is %s' % lda.perplexity_train
     
