@@ -2,3 +2,6 @@
 *.pyxbldc
 .ipynb_checkpoints/
 .DS_Store
+lasvegas/lv_dtm.npy
+lasvegas/dtm_lv_test.npy
+lasvegas/dtm_lv_train.npy
