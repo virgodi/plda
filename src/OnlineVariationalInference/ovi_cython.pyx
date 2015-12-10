@@ -92,7 +92,7 @@ cpdef void m_step(double[:, ::1] topics, double[:, ::1] topics_int,
                 topics[j_t, j_v] += rt * num_docs * (eta + el1) / batch_size
 
 
-def e_step(int[:] docs, long[:, ::1] dtm, double[:, ::1] gamma,
+def e_step(int[:] docs, int[:, ::1] dtm, double[:, ::1] gamma,
                   double[:, ::1] ExpELogBeta, double[::1] ExpLogTethad,
                   double[:, ::1] topics_int, double[:, ::1] phi,
                   int num_topics, int max_iterations):
@@ -100,7 +100,7 @@ def e_step(int[:] docs, long[:, ::1] dtm, double[:, ::1] gamma,
         _e_step(docs, dtm, gamma, ExpELogBeta, ExpLogTethad, topics_int,
                 phi, num_topics, max_iterations)
 
-cdef void _e_step(int[:] docs, long[:, ::1] dtm, double[:, ::1] gamma,
+cdef void _e_step(int[:] docs, int[:, ::1] dtm, double[:, ::1] gamma,
                   double[:, ::1] ExpELogBeta, double[::1] ExpLogTethad,
                   double[:, ::1] topics_int, double[:, ::1] phi,
                   int num_topics, int max_iterations) nogil:

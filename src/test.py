@@ -33,10 +33,10 @@ if __name__ == '__main__':
     # Constructing the model
 
     # UNCOMMENT THE NEXT LINE TO USE OVI:
-    #lda = oviLDA(num_topics, num_threads)
+    lda = oviLDA(num_topics, num_threads)
 
     # UNCOMMENT THE NEXT LINE TO USE CGS:
-    lda = cgsLDA(num_topics, num_threads)
+    # lda = cgsLDA(num_topics, num_threads)
     print ''
     print 'Fitting an LDA model on the Reuters dataset with 20 topics:'
     

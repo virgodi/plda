@@ -43,7 +43,6 @@ class oviLDA:
 
         '''
         # Initialisation
-        dtm = dtm.astype(int)
         num_docs, num_words = dtm.shape
         topics = np.random.gamma(100., 1./100., (self.num_topics, num_words))
         gamma = np.ones((num_docs, self.num_topics))
