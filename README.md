@@ -68,9 +68,9 @@ The organisation of the package is as follow:
            
             * transform(dtm): Transform new documents into a topic assignment matrix according to a previously trained model
             
-            | Parameters |                    Type                   |        Details       |
-            |------------|:-----------------------------------------:|----------------------|
-            |     dtm    | array of dimensions: len(docs) x len(voc) | document term matrix |
+            | Parameters |                    Type                   |                        Details                        |
+            |------------|:-----------------------------------------:|-------------------------------------------------------|
+            |     dtm    | array of dimensions: len(docs) x len(voc) | document term matrix (NO ZERO COLUMNS FOR CGS METHOD) |
             
             |   Return  |                     Type                    |        Details       |
             |-----------|:-------------------------------------------:|----------------------|
